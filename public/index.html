@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini RAG - AI-Powered Document Q&A</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .text-input, .file-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .text-input:focus, .file-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .query-section {
+            grid-column: 1 / -1;
+        }
+
+        .query-input {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .query-input input {
+            flex: 1;
+        }
+
+        .query-input button {
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .results {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+
+        .answer {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .answer h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .answer p {
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .sources h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .source-item {
+            background: #f8f9ff;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .source-id {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .source-meta {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .source-text {
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: #f0f2ff;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ffe6e6;
+            border: 1px solid #ff9999;
+            color: #cc0000;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #e6ffe6;
+            border: 1px solid #99ff99;
+            color: #006600;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .query-input {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Mini RAG</h1>
+            <p>AI-Powered Document Q&A with Vector Search</p>
+        </div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>📄 Upload Document</h2>
+                <div class="input-group">
+                    <label for="fileInput">Choose File (Optional)</label>
+                    <input type="file" id="fileInput" class="file-input" accept=".txt,.md,.pdf">
+                </div>
+                <div class="input-group">
+                    <label for="textInput">Or Paste Text</label>
+                    <textarea id="textInput" class="text-input textarea" placeholder="Paste your document text here..."></textarea>
+                </div>
+                <button id="uploadBtn" class="btn">📤 Process Document</button>
+                <div id="uploadStatus"></div>
+            </div>
+
+            <div class="card">
+                <h2>🔍 Query Your Documents</h2>
+                <div class="input-group">
+                    <label for="queryInput">Ask a Question</label>
+                    <div class="query-input">
+                        <input type="text" id="queryInput" class="text-input" placeholder="What would you like to know?">
+                        <button id="queryBtn" class="btn">🔍 Search</button>
+                    </div>
+                </div>
+                <div id="queryStatus"></div>
+            </div>
+        </div>
+
+        <div class="query-section">
+            <div class="card">
+                <h2>📊 Results & Citations</h2>
+                <div id="results">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Upload a document and ask a question to get started!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadBtn = document.getElementById('uploadBtn');
+        const queryBtn = document.getElementById('queryBtn');
+        const fileInput = document.getElementById('fileInput');
+        const textInput = document.getElementById('textInput');
+        const queryInput = document.getElementById('queryInput');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const queryStatus = document.getElementById('queryStatus');
+        const results = document.getElementById('results');
+
+        let hasDocuments = false;
+
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            const text = textInput.value.trim();
+
+            if (!file && !text) {
+                showMessage(uploadStatus, 'Please provide a file or text', 'error');
+                return;
+            }
+
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Processing...';
+            showMessage(uploadStatus, 'Processing document...', '');
+
+            try {
+                const formData = new FormData();
+                if (file) {
+                    formData.append('file', file);
+                } else {
+                    formData.append('text', text);
+                }
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(uploadStatus, `✅ Document processed successfully! Created ${data.chunks} chunks.`, 'success');
+                    hasDocuments = true;
+                    fileInput.value = '';
+                    textInput.value = '';
+                } else {
+                    showMessage(uploadStatus, `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(uploadStatus, `❌ Error: ${error.message}`, 'error');
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = '📤 Process Document';
+            }
+        });
+
+        queryBtn.addEventListener('click', async () => {
+            const query = queryInput.value.trim();
+            
+            if (!query) {
+                showMessage(queryStatus, 'Please enter a question', 'error');
+                return;
+            }
+
+            if (!hasDocuments) {
+                showMessage(queryStatus, 'Please upload a document first', 'error');
+                return;
+            }
+
+            queryBtn.disabled = true;
+            queryBtn.textContent = 'Searching...';
+            showMessage(queryStatus, 'Searching documents...', '');
+
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayResults(data);
+                    showMessage(queryStatus, '✅ Query completed successfully!', 'success');
+                } else {
+                    showMessage(queryStatus, `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showMessage(queryStatus, `❌ Error: ${error.message}`, 'error');
+            } finally {
+                queryBtn.disabled = false;
+                queryBtn.textContent = '🔍 Search';
+            }
+        });
+
+        function displayResults(data) {
+            const stats = `
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${data.processingTime}ms</div>
+                        <div class="stat-label">Processing Time</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.chunkCount}</div>
+                        <div class="stat-label">Chunks Retrieved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.query.length}</div>
+                        <div class="stat-label">Query Length</div>
+                    </div>
+                </div>
+            `;
+
+            const answer = `
+                <div class="answer">
+                    <h3>🤖 AI Answer</h3>
+                    <p>${data.answer}</p>
+                </div>
+            `;
+
+            const sources = `
+                <div class="sources">
+                    <h3>📚 Sources & Citations</h3>
+                    ${data.sources.map(source => `
+                        <div class="source-item">
+                            <div class="source-header">
+                                <span class="source-id">[${source.id}]</span>
+                                <span class="source-meta">Source: ${source.source} | Score: ${source.score?.toFixed(3) || 'N/A'}</span>
+                            </div>
+                            <div class="source-text">${source.text}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            results.innerHTML = stats + answer + sources;
+        }
+
+        function showMessage(element, message, type) {
+            element.innerHTML = `<div class="${type}">${message}</div>`;
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        queryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                queryBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
