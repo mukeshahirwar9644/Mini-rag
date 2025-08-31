@@ -1,5 +1,5 @@
 #### Project created by Mukesh Ahirwar
-Resum:
+Resume :
 https://drive.google.com/file/d/1CxdBV1x_i-TZCLgqi7elyW1kqfB7tYjE/view?usp=sharing
 
 # Mini RAG - AI-Powered Document Q&A
@@ -226,3 +226,4 @@ Health check endpoint.
 - Efficient chunking algorithm
 - Connection pooling for database
 - Response caching (future enhancement)
+
