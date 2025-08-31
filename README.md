@@ -76,7 +76,7 @@ A production-ready RAG (Retrieval-Augmented Generation) application that allows 
 - **Max Tokens**: 1000
 - **Prompt Engineering**: Context-aware with citation formatting
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Prerequisites
 - Node.js 18+ installed
@@ -120,7 +120,7 @@ The application will be available at `http://localhost:3000`
 3. **Get Answers**: Receive AI-generated answers with citations
 4. **Review Sources**: Examine the source chunks used for answers
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### POST `/api/upload`
 Upload documents or text for processing.
@@ -161,7 +161,7 @@ Query the knowledge base.
 ### GET `/api/health`
 Health check endpoint.
 
-## 📈 Evaluation & Testing
+## Evaluation & Testing
 
 ### Sample Q&A Pairs for Testing
 
@@ -226,4 +226,5 @@ Health check endpoint.
 - Efficient chunking algorithm
 - Connection pooling for database
 - Response caching (future enhancement)
+
 
