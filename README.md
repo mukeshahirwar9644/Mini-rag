@@ -1,8 +1,12 @@
-# 🤖 Mini RAG - AI-Powered Document Q&A
+#### Project created by Mukesh Ahirwar
+Resum:
+https://drive.google.com/file/d/1CxdBV1x_i-TZCLgqi7elyW1kqfB7tYjE/view?usp=sharing
+
+# Mini RAG - AI-Powered Document Q&A
 
 A production-ready RAG (Retrieval-Augmented Generation) application that allows users to upload documents, ask questions, and receive AI-generated answers with proper citations and source tracking.
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -23,7 +27,7 @@ A production-ready RAG (Retrieval-Augmented Generation) application that allows 
                        └─────────────────┘    └─────────────────┘
 ```
 
-## 🚀 Features
+## Features
 
 - **Document Processing**: Upload files or paste text directly
 - **Smart Chunking**: Configurable chunk size with overlap for context preservation
@@ -34,7 +38,7 @@ A production-ready RAG (Retrieval-Augmented Generation) application that allows 
 - **Performance Metrics**: Request timing and processing statistics
 - **Modern UI**: Responsive design with beautiful gradients
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend
 - **Runtime**: Node.js with Express
@@ -48,7 +52,7 @@ A production-ready RAG (Retrieval-Augmented Generation) application that allows 
 - **Styling**: CSS3 with modern gradients and animations
 - **Responsive**: Mobile-first design approach
 
-## 📊 Configuration
+## Configuration
 
 ### Chunking Strategy
 - **Chunk Size**: 1000 characters
@@ -187,32 +191,16 @@ Health check endpoint.
 - **Response Time**: <3 seconds for typical queries
 - **Citation Accuracy**: 90%+ of citations should map to correct sources
 
-## 🌐 Deployment
+## Deployment
 
-### Free Hosting Options
+### Freely hosted on
 
-1. **Render** (Recommended)
+1. **Render**
    - Free tier with 750 hours/month
    - Easy deployment from GitHub
    - Automatic environment variable management
 
-2. **Railway**
-   - Free tier with $5 credit
-   - Simple deployment process
-   - Good for small projects
-
-3. **Fly.io**
-   - Generous free tier
-   - Global edge deployment
-   - Docker-based deployment
-
-### Deployment Steps (Render)
-1. Push code to GitHub
-2. Connect repository to Render
-3. Set environment variables
-4. Deploy automatically
-
-## 🔒 Security Considerations
+## Security Considerations
 
 - API keys stored server-side only
 - CORS enabled for development
@@ -220,7 +208,7 @@ Health check endpoint.
 - File size limits enforced
 - No sensitive data logging
 
-## 📝 Remarks & Trade-offs
+## Remarks & Trade-offs
 
 ### Provider Limits
 - **Cohere Free Tier**: 100 requests/month for embeddings
@@ -238,27 +226,3 @@ Health check endpoint.
 - Efficient chunking algorithm
 - Connection pooling for database
 - Response caching (future enhancement)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-MIT License - see LICENSE file for details.
-
-## 🆘 Support
-
-For issues or questions:
-1. Check the troubleshooting section
-2. Review API documentation
-3. Open a GitHub issue
-4. Check provider status pages
-
----
-
-**Built with ❤️ using modern AI technologies**
